@@ -21,6 +21,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useToast } from "@/components/ui/use-toast";
 
 type Props = {};
 
@@ -31,6 +32,8 @@ const AuthForm = (props: Props) => {
 	const router = useRouter();
 	const [variant, setVariant] = useState<variant>("Login");
 	const [isLoading, setIsLoading] = useState(false);
+
+	const { toast } = useToast();
 
 	const formSchema = z.object({
 		name: z.string().optional(),
@@ -69,11 +72,17 @@ const AuthForm = (props: Props) => {
 			axios
 				.post("/api/register", data)
 				.then(() => {
-					// toast.success("Succesfully signed up");
+					toast({
+						title: "Succesfully Signed up",
+						description: "Authenticated",
+					});
 					signIn("credentials", data);
 				})
 				.catch((err) => {
-					// toast.error(err.response.data);
+					toast({
+						title: "Error",
+						description: err.response.data,
+					});
 				})
 				.finally(() => setIsLoading(false));
 		}
@@ -85,12 +94,18 @@ const AuthForm = (props: Props) => {
 			})
 				.then((callback) => {
 					if (callback?.error) {
-						// toast.error("Invalid credentials");
-						console.log("Invalid Credentials");
+						toast({
+							title: "Invalid credentials",
+							description: "Unauthenticated",
+							variant: "destructive",
+						});
 					}
 
 					if (callback?.ok && !callback?.error) {
-						// toast.success("Logged in");
+						toast({
+							title: "Succesfully signed in",
+							description: "Authenticated",
+						});
 						router.push("/");
 					}
 				})
