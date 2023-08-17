@@ -50,7 +50,7 @@ const AuthForm = (props: Props) => {
 	useEffect(() => {
 		if (session?.status === "authenticated") {
 			console.log("Authendticated");
-			router.push("/users");
+			router.push("/");
 		}
 	}, [session?.status, router]);
 
@@ -86,12 +86,12 @@ const AuthForm = (props: Props) => {
 				.then((callback) => {
 					if (callback?.error) {
 						// toast.error("Invalid credentials");
-            console.log('Invalid Credentials');
+						console.log("Invalid Credentials");
 					}
 
 					if (callback?.ok && !callback?.error) {
 						// toast.success("Logged in");
-						router.push("/users");
+						router.push("/");
 					}
 				})
 				.finally(() => setIsLoading(false));
@@ -122,40 +122,50 @@ const AuthForm = (props: Props) => {
 			>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-						{variant === 'Register' && <FormField
-							control={form.control}
-							name="name"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Name</FormLabel>
-									<FormControl>
-										<Input placeholder="e.g: james bond" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>}
-            <FormField
+						{variant === "Register" && (
+							<FormField
+								control={form.control}
+								name="name"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Name</FormLabel>
+										<FormControl>
+											<Input placeholder="e.g: james bond" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						)}
+						<FormField
 							control={form.control}
 							name="email"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Email</FormLabel>
 									<FormControl>
-										<Input type="email" placeholder="someone@example.com" {...field} />
+										<Input
+											type="email"
+											placeholder="someone@example.com"
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
-            <FormField
+						<FormField
 							control={form.control}
 							name="password"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Password</FormLabel>
 									<FormControl>
-										<Input type='password' placeholder="**********" {...field} />
+										<Input
+											type="password"
+											placeholder="**********"
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
